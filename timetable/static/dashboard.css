@@ -1,0 +1,131 @@
+.row {
+    background-color: #302b63;
+    color: whitesmoke;
+    cursor: pointer;
+    padding: 15px;
+    width: 22%;
+    border: none;
+    text-align: left;
+    outline: none;
+    font-size: 15px;
+    font-family: Capriola;
+    text-indent: 1cm;
+    font-weight: bold;
+}
+.content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+    background-color: #f1f1f1;
+}
+
+.header{
+    background-color: #302b63;
+    color: whitesmoke;
+    cursor: pointer;
+    padding: 15px;
+    width: 22%;
+    border: none;
+    text-align: left;
+    outline: none;
+    font-family: Capriola;
+    text-indent: 1cm;
+    font-weight: 900;
+    font-size:20px;
+    text-indent: 0cm;
+}
+.sub_row{
+    font-size: 12px;
+    text-indent: 1.5cm;
+    width: 22%;
+}
+
+.row:hover {
+    background-color: #545086;
+}
+.edit-button:hover {
+    background-color: #545086;
+}
+.delete-button:hover {
+    background-color: #545086;
+}
+.add-button:hover {
+    background-color: #545086;
+}
+.row:after {
+    content:'v';
+    font-weight: bold;
+    float: right;
+    margin-left: 5px;
+}
+
+.active:after {
+    content: '>';
+    
+}
+
+.delete-button{
+    background-color: #302b63;
+    padding: 15px;
+    width: 3%;
+    border: none;
+    outline: none;
+    color:whitesmoke;
+    cursor:pointer;
+    margin-left: -50px;
+}
+
+.edit-button{
+    background-color:#302b63;
+    padding: 15px;
+    width: 3%;
+    border: none;
+    outline: none;
+    color:whitesmoke;
+    cursor:pointer;
+    margin-left: -100px;
+}
+
+.add-button{
+    background-color: #302b63;
+    padding: 15px;
+    width: 3%;
+    border: none;
+    outline: none;
+    color:whitesmoke;
+    cursor:pointer;
+    margin-left: -95px;
+    font-size: 15px;
+    overflow:hidden;
+}
+
+.person{
+    background-color:#302b63;
+    padding: 15px;
+    width: 3%;
+    border: none;
+    outline: none;
+    color:whitesmoke;
+    cursor:pointer;
+    margin-left: -100px;
+}
+
+.delete-button-person{
+    background-color: #302b63;
+    border: none;
+    outline: none;
+    color:whitesmoke;
+    cursor:pointer;
+    height:1cm;
+    width:2cm;
+}
+
+.edit-button-person{
+    background-color: #302b63;
+    border: none;
+    outline: none;
+    color:whitesmoke;
+    cursor:pointer;
+    height:1cm;
+    width:2cm;
+}

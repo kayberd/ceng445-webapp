@@ -1,0 +1,4 @@
+django~=3.2.9
+django-debug-toolbar
+prettytable
+channels

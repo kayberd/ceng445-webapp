@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="">
+<head>
+  <meta charset="utf-8">
+  
+<!-- Styles -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+<link rel="stylesheet" type="text/css" href="../../static/table.css">
+<link rel="stylesheet" type="text/css" href="../../static/dashboard.css">
+<link rel="stylesheet" type="text/css" href="../../static/popup.css">
+<link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+<link href='https://fonts.googleapis.com/css?family=Capriola' rel='stylesheet'>
+
+<!-- Scripts -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+<script type= "text/javascript" src="/static/js/table_list.js" > </script>
+<script type= "text/javascript" src="/static/js/jquery.js" > </script>
+
+
+
+
+
+<div id="addTableFormDiv" style = "left:1300px;top:95px" class="form-popup" style="display: none;" >
+  <form id = "addTableForm" onsubmit="return false;"  class="form-container" style="max-height: 500px;">
+      <input type="text" placeholder="Enter Name" name="name" required><br/><br/>
+      <input type="number" placeholder="Enter Day Number" name="days" required> <br/><br/>
+      <input type="number" placeholder="Enter Slots Per Day " name="slotsPerDay" required> <br/><br/>
+      <input type="number" placeholder="Enter Slot Offset" name="slotOffset" required> <br/><br/>
+      <button onclick="addTable('addTableForm')" class="accept-button"><i class="fas fa-check"></i></button>
+      <button onclick = "closeAddForm()" class="cancel-button"><i class="fas fa-times"></i></button>
+  </form>
+</div>
+
+
+{% load static %}
+</head>
+
+<body>
+    <div>
+      <main>
+        schedule.org
+      </main>
+        <table class="table table-borded table-responsive table-striped " id="table-list">
+            <thead class="table-dark">
+                <tr>
+                    <th>Creator</th>
+                    <th>Table Name</th>
+                    <th>First Day</th>
+                    <th>Last Day</th>
+                    <th>Starts At</th>
+                    <!-- <th>Ends At</th> -->
+                    <th>Shared</th>
+                    <th>Last Change</th>
+                    <th> Tools </th>
+                </tr>
+            </thead>
+            <tbody id='table_body'>
+            </tbody>
+            
+        </table>
+          <input id="addTableButton" type="button" name="insert" onclick="openAddForm()" value="Create New Table" class="btn btn-info insert_button"  />
+    </div>    
+    
+    <br>
+
+</body>
+
+</html>
+
+<script>
+
+    const username = '{{user.username}}'
+    const chatSocket = new WebSocket(
+            'ws://' +
+            window.location.host +
+            '/ws/table_view/' +
+            'T' +
+            '/'
+        );
+
+    chatSocket.onmessage = (msg) => {
+        //check with tid
+        let type = JSON.parse(msg.data).message;
+        let notifier = JSON.parse(msg.data).username;
+        if(username != notifier){
+          loadTables();
+        }
+    }
+
+    function notify(type){
+        chatSocket.send(JSON.stringify({
+           'message':type,
+           'username':username
+        }));
+    }
+
+  $(document).ready(() => {
+    loadTables();
+  })
+
+  $("#addTableForm").click(function( event ) {
+      event.preventDefault();
+  });
+
+</script>

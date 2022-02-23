@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="../../static/dashboard.css">
+<link rel="stylesheet" type="text/css" href="../../static/popup.css">
+
+<link href='https://fonts.googleapis.com/css?family=Capriola' rel='stylesheet'>
+<link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+
+
+{% load static %}
+
+<!-- Scripts -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+<script type= "text/javascript" src="/static/js/table_list.js" > </script>
+<script type= "text/javascript" src="/static/js/jquery.js" > </script>
+
+<div class="form-popup" id="addRoomFormDiv">
+    <form id="addRoomForm" onsubmit="return false;"  class="form-container">
+        <input type="text" placeholder="Enter Capacity" name="capacity" required><br/>
+        <input type="text" placeholder="Enter Description" name="description" required> <br/>
+        <button onclick="addRoom('addRoomForm')"  class="accept-button"><i class="fas fa-check"></i></button>
+        <button onclick = "closeAddRoomForm()" class="cancel-button"><i class="fas fa-times"></i></button>
+    </form>
+</div>
+
+<div class="form-popup" id="addSectionFormDiv">
+    <form id="addSectionForm" onsubmit="return false;" class="form-container">
+        <input type="text" placeholder="Enter Course ID" name="courseId" required><br/>
+        <input type="text" placeholder="Enter Current Section" name="currSec" required><br/>
+        <input type="text" placeholder="Enter Total Section" name="totSection" required><br/>
+        <input type="text" placeholder="Enter Instructor Name" name="instructor" required><br/>
+        <input type="text" placeholder="Enter Description" name="description" required> <br/>
+        <button onclick="addSection('addSectionForm')"class="accept-button"><i class="fas fa-check"></i></button>
+        <button onclick = 'closeAddSectionForm()' class="cancel-button"><i class="fas fa-times"></i></button>
+    </form>
+</div> 
+
+<div class="form-popup" id="addPersonFormDiv">
+    <form id="addPersonForm" onsubmit="return false;"  class="form-container">
+        <input type="text" placeholder="Enter Name" name="name" required><br/>
+        is instructor?<br/>
+
+        <input type="radio" id="yes" name="is_instructor" value="Yes">
+        <label for="yes">YES</label><br>
+        <input type="radio" id="no" name="is_instructor" value="No">
+        <label for="no"> NO </label><br>
+
+        <button onclick="addPerson('addPersonForm')"  class="accept-button"><i class="fas fa-check"></i></button>
+        <button onclick = "closeAddPersonForm()" class="cancel-button"><i class="fas fa-times"></i></button>
+    </form>
+</div>
+<div class="form-popup" id="addEventFormDiv">
+    <form id="addEventForm" onsubmit="return false;"  class="form-container">
+        <input type="text" placeholder="Enter Section" name="section" required><br/>
+        <input type="text" placeholder="Enter Room" name="room" required><br/>
+        <input type="text" placeholder="Enter Description" name="description" required><br/>
+        <input type="text" placeholder="Enter Length" name="length" required><br/>
+
+        <button onclick="addEvent('addEventForm')"  class="accept-button"><i class="fas fa-check"></i></button>
+        <button onclick = "closeAddEventForm()" class="cancel-button"><i class="fas fa-times"></i></button>
+    </form>
+</div>
+
+<style>
+    th, td {
+      border-style: solid;
+      width: 2cm;
+      border-color: #302b63;
+    }
+</style>
+<table id="peopleTable"  class = "form-popup">
+    <tbody id="peopleTableBody" align="center">
+        <tr id="peopleTableHeader">
+            <th> ID </th>
+            <th>Name</th> <th> Is instructor</th>
+            <th>
+                Delete
+            </th>
+            <th>
+                Edit
+            </th>
+            <th>
+                <button style="margin-left: 0;height:1cm;width:2cm;" class= "cancel-button" onclick = "closePeopleTable()"><i class="fas fa-times"></i></button>
+            </th>
+        </tr>
+    </tbody>
+
+</table>
+
+
+</head>
+<body style="margin: 0;">
+    
+<button class="header">Dashboard</button>
+<div id="roomDiv">
+    
+    <button id="roomTitleButton" class="row"> Rooms 
+        <button id="addRoomButton" class="add-button" onclick="openAddRoomForm()"><i class="fa fa-plus"></i></button>
+    </button>
+
+
+</div>
+
+<div id="sectionDiv">
+
+    <button id = "sectionTitleButton" class="row"> Sections 
+        <button id ="addSectionButton" class="add-button" onclick="openAddSectionForm()"><i class="fa fa-plus"></i></button>
+    </button>
+
+</div>
+<div>
+    <button class="row"> Utilities </button>
+    <div id ="shareContentView" class="content">
+        {% if is_shared %}
+            <button class="row sub_row"> Toggle to Unshare 
+                <button class="delete-button" onclick="toggleTableShare('unshare')"><i class="fas fa-toggle-on"></i></button>
+            </button>
+        {% else %}
+            <button class="row sub_row"> Toggle to Share 
+                <button class="delete-button" onclick="toggleTableShare('share')"><i class="fas fa-toggle-off"></i></button>
+            </button>
+        {% endif %}
+    </div>
+    <div id="copyTableButtonDiv" class="content">
+        <button class="row sub_row">Copy current table
+            <button class="delete-button" onclick="copyCurrentTable()"><i class="fas fa-copy"></i></button>
+        </button>
+    </div>
+</div>
+
+<style>
+    td {
+      border-style: solid;
+      width : 5cm;
+      height: 2cm;
+      border-color: #302b63;
+      text-align: center;
+      font-family: Capriola;
+      color:#302b63;
+      
+    }
+</style>
+<div id="tableDisplayDiv">
+
+    <table id="tableDisplay">
+    </table>
+</div>
+
+<div id="conflictReportDiv">
+</div>
+
+
+
+
+
+<script>
+
+    const roomName = {{tid}}
+    const username = '{{user.username}}'
+    const chatSocket = new WebSocket(
+            'ws://' +
+            window.location.host +
+            '/ws/table_view/' +
+            roomName +
+            '/'
+        );
+    const chatSocketShare = new WebSocket(
+        'ws://' +
+        window.location.host +
+        '/ws/table_view/' +
+        'T' +
+        '/'
+    )
+    chatSocket.onmessage = (msg) => {
+        //check with tid
+        let type = JSON.parse(msg.data).message;
+        let notifier = JSON.parse(msg.data).username;
+        if(username != notifier){
+            if(type=='rooms'){
+                loadRooms();
+            }
+            else if(type=='sections'){
+                loadSections();
+            }
+            else if(type=='people'){
+                loadPeople();
+            }
+            else if(type=='events'){
+                loadTableDisplay();
+            }
+            else if(type=='share'){
+                loadTable();
+            }
+      
+        }
+       
+    }
+
+    function notify(type){
+        chatSocket.send(JSON.stringify({
+           'message':type,
+           'username':username
+        }));
+    }
+    function notifyShare(type){
+  
+        chatSocketShare.send(JSON.stringify({
+           'message':type,
+           'username':username
+        }));
+    }
+
+
+
+
+    currentTid = {{tid}}
+    
+
+    // debugger;
+    var coll = document.getElementsByClassName("row");
+        var allNextSiblings = (e) => {
+        var siblings = []
+        var sibling = e.nextElementSibling
+        while(sibling){
+            siblings.push(sibling)
+            sibling=sibling.nextElementSibling
+        }
+        return siblings
+    }
+    for (var i = 0; i < coll.length; i++) {
+        
+
+    coll[i].addEventListener("click", function() {
+        var siblings = allNextSiblings(this)
+        this.classList.toggle("active");
+        for(sibling of siblings){
+            if (sibling.style.maxHeight){
+                sibling.style.maxHeight = null;
+            } else {
+                sibling.style.maxHeight = sibling.scrollHeight + "px";
+            } 
+        }
+
+    });
+    }
+
+    $("#addRoomForm").click(function( event ) {
+      event.preventDefault();
+    });
+
+    $(document).ready(() => {
+        loadRooms();
+        loadSections();
+        loadTableDisplay();
+    })
+
+
+</script>
+
+</body>
+</html>
+
